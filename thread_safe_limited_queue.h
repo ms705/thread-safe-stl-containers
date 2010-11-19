@@ -20,11 +20,11 @@ public:
 
     void set_max_size( size_t m ) { boost::lock_guard<boost::mutex> lock( mutex ); if ( m > storage.max_size() || m == 0 ) my_max_size = storage.max_size(); else my_max_size = m; }
 
-    T & back( void ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.back(); }
-    const T & back( void ) const { boost::lock_guard<boost::mutex> lock( mutex ); return storage.back(); }
+    T & back( void ) { boost::unique_lock<boost::mutex> lock( mutex ); if ( storage.empty() ) emptyCond.wait( lock ); return storage.back(); }
+    const T & back( void ) const { boost::unique_lock<boost::mutex> lock( mutex ); if ( storage.empty() ) emptyCond.wait( lock ); return storage.back(); }
 
-    T & front( void ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.front(); }
-    const T & front( void ) const { boost::lock_guard<boost::mutex> lock( mutex ); return storage.front(); }
+    T & front( void ) { boost::unique_lock<boost::mutex> lock( mutex ); if ( storage.empty() ) emptyCond.wait( lock ); return storage.front(); }
+    const T & front( void ) const { boost::unique_lock<boost::mutex> lock( mutex ); if ( storage.empty() ) emptyCond.wait( lock ); return storage.front(); }
 
     void push( const T & u ) { boost::unique_lock<boost::mutex> lock( mutex ); if ( storage.size() == my_max_size ) fullCond.wait( lock ); storage.push( u ); emptyCond.notify_one(); }
 
