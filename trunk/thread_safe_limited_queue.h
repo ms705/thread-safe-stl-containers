@@ -18,7 +18,7 @@ public:
 
     size_t max_size( void ) const { boost::lock_guard<boost::mutex> lock( mutex ); return my_max_size; }
 
-    void set_max_size( size_t m ) { boost::lock_guard<boost::mutex> lock( mutex ); if ( m > storage.max_size() ) my_max_size = storage.max_size(); else my_max_size = m; }
+    void set_max_size( size_t m ) { boost::lock_guard<boost::mutex> lock( mutex ); if ( m > storage.max_size() || m == 0 ) my_max_size = storage.max_size(); else my_max_size = m; }
 
     T & back( void ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.back(); }
     const T & back( void ) const { boost::lock_guard<boost::mutex> lock( mutex ); return storage.back(); }
