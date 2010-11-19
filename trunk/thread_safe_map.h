@@ -17,6 +17,7 @@ public:
     typedef typename std::map<Key, T, Compare, Allocator>::size_type size_type;
     typedef typename std::map<Key, T, Compare, Allocator>::key_compare key_compare;
     typedef typename std::map<Key, T, Compare, Allocator>::value_compare value_compare;
+    typedef typename std::map<Key, T, Compare, Allocator>::value_type value_type;
 
     //Constructors
     explicit map ( const Compare& comp = Compare(), const Allocator & alloc = Allocator() ) : storage( comp, alloc ) { }
@@ -53,8 +54,8 @@ public:
     T & operator[]( const Key & x ) { return storage[x]; }
 
     //Modifiers
-    std::pair<iterator, bool> insert( const Key & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.insert( x ); }
-    iterator insert( iterator position, const Key & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.insert( position, x ); }
+    std::pair<iterator, bool> insert( const value_type & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.insert( x ); }
+    iterator insert( iterator position, const value_type & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.insert( position, x ); }
     template <class InputIterator> void insert( InputIterator first, InputIterator last ) { boost::lock_guard<boost::mutex> lock( mutex ); storage.insert( first, last ); }
 
     void erase( iterator pos ) { boost::lock_guard<boost::mutex> lock( mutex ); storage.erase( pos ); }
@@ -103,6 +104,7 @@ public:
     typedef typename std::multimap<Key, T, Compare, Allocator>::size_type size_type;
     typedef typename std::multimap<Key, T, Compare, Allocator>::key_compare key_compare;
     typedef typename std::multimap<Key, T, Compare, Allocator>::value_compare value_compare;
+    typedef typename std::multimap<Key, T, Compare, Allocator>::value_type value_type;
 
     //Constructors
     explicit multimap ( const Compare& comp = Compare(), const Allocator & alloc = Allocator() ) : storage( comp, alloc ) { }
@@ -136,8 +138,8 @@ public:
     bool empty( void ) const { boost::lock_guard<boost::mutex> lock( mutex ); return storage.empty(); }
 
     //Modifiers
-    std::pair<iterator, bool> insert( const Key & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.insert( x ); }
-    iterator insert( iterator position, const Key & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.insert( position, x ); }
+    std::pair<iterator, bool> insert( const value_type & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.insert( x ); }
+    iterator insert( iterator position, const value_type & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.insert( position, x ); }
     template <class InputIterator> void insert( InputIterator first, InputIterator last ) { boost::lock_guard<boost::mutex> lock( mutex ); storage.insert( first, last ); }
 
     void erase( iterator pos ) { boost::lock_guard<boost::mutex> lock( mutex ); storage.erase( pos ); }
