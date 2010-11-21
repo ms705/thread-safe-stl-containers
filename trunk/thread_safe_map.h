@@ -51,7 +51,7 @@ public:
     bool empty( void ) const { boost::lock_guard<boost::mutex> lock( mutex ); return storage.empty(); }
 
     //Element Access
-    T & operator[]( const Key & x ) { return storage[x]; }
+    T & operator[]( const Key & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage[x]; }
 
     //Modifiers
     std::pair<iterator, bool> insert( const value_type & x ) { boost::lock_guard<boost::mutex> lock( mutex ); return storage.insert( x ); }
